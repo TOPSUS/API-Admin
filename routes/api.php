@@ -14,6 +14,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+Route::prefix('admin')->group(function () {
+    Route::post('login', 'AuthController@login');
+});
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('test/data', function(Request $request) {
+        return response([
+            'status' => 200,
+            'message' => $request->user()
+        ]);
+    });
 });
