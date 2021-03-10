@@ -33,4 +33,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     /* Transaksi Routes */
     Route::get('transaksi/proses', 'PembelianController@indexProses');
     Route::get('transaksi/done', 'PembelianController@indexDone');
+
+    /* Jadwal Routes */
+    Route::resource('jadwal', 'JadwalController');
 });
