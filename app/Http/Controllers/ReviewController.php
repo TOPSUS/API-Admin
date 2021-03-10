@@ -22,6 +22,7 @@ class ReviewController extends Controller
         if (count($reviews) > 0) {
             foreach($reviews as $index => $review) {
                 array_push($data, [
+                    'id' => $review->id,
                     'image' => $review->pembelian->user->foto,
                     'username' => $review->pembelian->user->nama,
                     'email' => $review->pembelian->user->email,

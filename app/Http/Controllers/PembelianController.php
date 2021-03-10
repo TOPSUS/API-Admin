@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Pembelian;
+use App\DetailPembelian;
+
 class PembelianController extends Controller
 {
     /**
@@ -80,5 +83,51 @@ class PembelianController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function indexProses() {
+        return $this->getPembelian('Menunggu Konfirmasi');
+    }
+
+    public function indexDone() {
+        return $this->getPembelian('Terkonfirmasi');
+    }
+
+    private function getPembelian($tipe) {
+        $data = array();
+        $detail = array();
+        $pembelians = Pembelian::where('status', '=', $tipe)->get();
+
+        if (count($pembelians) > 0) {
+            foreach($pembelians as $pembelian) {
+                foreach($pembelian->detail as $data_detail) {
+                    array_push($detail, [
+                        'kode' => $data_detail->kode_tiket
+                    ]);
+                }
+
+                array_push($data, [
+                    'id' => $pembelian->id,
+                    'username' => $pembelian->user->nama,
+                    'tanggal' => $pembelian->tanggal,
+                    'status' => $pembelian->status,
+                    'tiket' => $detail,
+                    'asal' => $pembelian->jadwal->pelabuhanasal->nama_pelabuhan,
+                    'tujuan' => $pembelian->jadwal->pelabuhantujuan->nama_pelabuhan
+                ]);
+            }
+    
+            return response([
+                'status' => 200,
+                'data' => $data,
+                'message' => 'data fetched'
+            ]);
+        }
+
+        return response([
+            'status' => 404,
+            'data' => $data,
+            'message' => 'failed to fetch data'
+        ]);
     }
 }

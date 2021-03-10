@@ -31,4 +31,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('review', 'ReviewController');
 
     /* Transaksi Routes */
+    Route::get('transaksi/proses', 'PembelianController@indexProses');
+    Route::get('transaksi/done', 'PembelianController@indexDone');
 });
