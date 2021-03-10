@@ -36,4 +36,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     /* Jadwal Routes */
     Route::resource('jadwal', 'JadwalController');
+
+    /* Reward Routes */
+    Route::resource('reward', 'RewardController');
 });
