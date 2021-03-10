@@ -39,4 +39,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     /* Reward Routes */
     Route::resource('reward', 'RewardController');
+
+    /* Speedboat Routes */
+    Route::resource('speedboat', 'SpeedboatController');
+    Route::get('speedboat/{id}/berita', 'SpeedboatController@berita');
+    Route::get('speedboat/{id}/review', 'SpeedboatController@review');
 });
