@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Review;
+
 class ReviewController extends Controller
 {
     /**
@@ -14,6 +16,33 @@ class ReviewController extends Controller
     public function index()
     {
         //
+        $data = array();
+        $reviews = Review::all();
+
+        if (count($reviews) > 0) {
+            foreach($reviews as $index => $review) {
+                array_push($data, [
+                    'image' => $review->pembelian->user->foto,
+                    'username' => $review->pembelian->user->nama,
+                    'email' => $review->pembelian->user->email,
+                    'tanggal' => $review->pembelian->tanggal,
+                    'score' => $review->score,
+                    'review' => $review->review
+                ]);
+            }
+
+            return response([
+                'status' => 200,
+                'data' => $data,
+                'message' => 'data fetched'
+            ]);
+        }
+
+        return response([
+            'status' => 404,
+            'data' => $data,
+            'message' => 'failed to fetch data'
+        ]);
     }
 
     /**
