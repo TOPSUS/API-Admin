@@ -16,21 +16,47 @@ class ReviewController extends Controller
     public function index()
     {
         //
-        $data = array();
+        $data = array('review' => array());
+        $score = array('1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0);
+
         $reviews = Review::all();
 
         if (count($reviews) > 0) {
+            $total_review = 0;
+            $total_score = 0;
+
             foreach($reviews as $index => $review) {
-                array_push($data, [
-                    'id' => $review->id,
+                $time = strtotime($review->pembelian->tanggal);
+                $date = date("d-m-Y H:i", $time);
+
+                $total_review = $total_review + 1;
+                $total_score = $total_score + $review->score;
+
+                if ($review->score <= 1 && $review->score > 0) {
+                    $score['1'] += 1;
+                } else if ($review->score <= 2 && $review->score > 1) {
+                    $score['2'] += 1;
+                } else if ($review->score <= 3 && $review->score > 2) {
+                    $score['3'] += 1;
+                } else if ($review->score <= 4 && $review->score > 3) {
+                    $score['4'] += 1;
+                } else if ($review->score <= 5 && $review->score > 4) {
+                    $score['5'] += 1;
+                }
+
+                array_push($data['review'], [
+                    'id' => $review->id_review,
                     'image' => $review->pembelian->user->foto,
-                    'username' => $review->pembelian->user->nama,
                     'email' => $review->pembelian->user->email,
-                    'tanggal' => $review->pembelian->tanggal,
+                    'tanggal' => $date,
                     'score' => $review->score,
                     'review' => $review->review
                 ]);
             }
+
+            $data['total_review'] = $total_review;
+            $data['total_score'] = $total_score / $total_review;
+            $data['score'] = $score;
 
             return response([
                 'status' => 200,
