@@ -18,6 +18,13 @@ Route::prefix('admin')->group(function () {
     Route::post('login', 'AuthController@login');
 });
 
+Route::get('unauthenticate', function() {
+    return response([
+        'status' => 401,
+        'message' => 'Not Authenticate, Login First!'
+    ]);
+})->name('unauthenticate');
+
 Route::middleware(['auth:sanctum'])->group(function () {
     /* Route for Testing API */
     Route::get('test/data', function(Request $request) {

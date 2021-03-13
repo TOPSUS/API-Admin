@@ -11,6 +11,8 @@ class Review extends Model
     use SoftDeletes;
 
     protected $table = 'tb_review';
+
+    protected $primaryKey = 'id_review';
     
     protected $dates = ['deleted_at'];
 
