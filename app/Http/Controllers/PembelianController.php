@@ -100,22 +100,23 @@ class PembelianController extends Controller
 
         if (count($pembelians) > 0) {
             foreach($pembelians as $pembelian) {
-                foreach($pembelian->detail as $data_detail) {
-                    array_push($detail, [
-                        'kode' => $data_detail->kode_tiket
-                    ]);
-                }
-
-                array_push($data, [
+                array_push($detail, [
                     'id' => $pembelian->id,
                     'username' => $pembelian->user->nama,
-                    'tanggal' => $pembelian->tanggal,
+                    'email' => $pembelian->user->email,
+                    'tanggal' => date("d F Y - H:i", strtotime($pembelian->tanggal)),
                     'status' => $pembelian->status,
-                    'tiket' => $detail,
-                    'asal' => $pembelian->jadwal->pelabuhanasal->nama_pelabuhan,
-                    'tujuan' => $pembelian->jadwal->pelabuhantujuan->nama_pelabuhan
+                    'asal' => $pembelian->jadwal->pelabuhanasal->kode_pelabuhan,
+                    'tujuan' => $pembelian->jadwal->pelabuhantujuan->kode_pelabuhan,
+                    'tanggal_berangkat' => date("d F Y", strtotime($pembelian->jadwal->waktu_berangkat)),
+                    'tanggal_sampai' => date("d F Y", strtotime($pembelian->jadwal->waktu_sampai)),
+                    'jam_berangkat' => date("H:i", strtotime($pembelian->jadwal->waktu_berangkat)),
+                    'jam_sampai' => date("H:i", strtotime($pembelian->jadwal->waktu_sampai)),
+                    'person' => count($pembelian->detail)
                 ]);
             }
+
+            $data['transaksi_list'] = $detail;
     
             return response([
                 'status' => 200,
@@ -126,8 +127,82 @@ class PembelianController extends Controller
 
         return response([
             'status' => 404,
-            'data' => $data,
             'message' => 'failed to fetch data'
+        ]);
+    }
+
+    public function detailTransaksi($id) {
+        $data = array();
+        $detail = array();
+        $pembelian = Pembelian::find($id);
+
+        if (isset($pembelian)) {
+            $detail_pembelians = DetailPembelian::where('id_pembelian', $id)->get();
+
+            if (count($detail_pembelians) > 0) {
+                foreach ($detail_pembelians as $dp) {
+                    array_push($detail, [
+                        'nama' => $dp->nama_pemegang_tiket,
+                        'kode_tiket' => $dp->kode_tiket,
+                        'nomor_id' => $dp->no_id_card,
+                        'status' => $dp->status
+                    ]);
+                }
+            }
+
+            $data['transaksi'] = [
+                'id' => $pembelian->id,
+                'username' => $pembelian->user->nama,
+                'email' => $pembelian->user->email,
+                'tanggal' => date("d F Y - H:i", strtotime($pembelian->tanggal)),
+                'status' => $pembelian->status,
+                'asal' => $pembelian->jadwal->pelabuhanasal->kode_pelabuhan,
+                'tujuan' => $pembelian->jadwal->pelabuhantujuan->kode_pelabuhan,
+                'tanggal_berangkat' => date("d F Y", strtotime($pembelian->jadwal->waktu_berangkat)),
+                'tanggal_sampai' => date("d F Y", strtotime($pembelian->jadwal->waktu_sampai)),
+                'jam_berangkat' => date("H:i", strtotime($pembelian->jadwal->waktu_berangkat)),
+                'jam_sampai' => date("H:i", strtotime($pembelian->jadwal->waktu_sampai)),
+                'person' => count($pembelian->detail),
+                'bukti' => $pembelian->bukti,
+                'transaksi_detail' => $detail
+            ];
+    
+            return response([
+                'status' => 200,
+                'data' => $data,
+                'message' => 'data fetched'
+            ]);
+        }
+
+        return response([
+            'status' => 404,
+            'message' => 'failed to fetch data'
+        ]);
+    }
+
+    public function approvePembelian($id) {
+        $pembelian = Pembelian::find($id);
+
+        if (isset($pembelian)) {
+            if ($pembelian->bukti != NULL) {
+                $pembelian->status = "Terkonfirmasi";
+                $pembelian->save();
+    
+                return response([
+                    'status' => 200,
+                    'message' => 'Berhasil Update Status'
+                ]);
+            }
+    
+            return response([
+                'status' => 500,
+                'message' => 'Bukti Pembayaran tidak ada'
+            ]);
+        }
+    
+        return response([
+            'status' => 404,
+            'message' => 'Pembelian tidak ditemukan'
         ]);
     }
 }

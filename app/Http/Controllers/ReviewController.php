@@ -13,14 +13,23 @@ class ReviewController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         //
         $data = array();
         $temp = array();
         $score = array('1' => 0, '2' => 0, '3' => 0, '4' => 0, '5' => 0);
 
-        $reviews = Review::orderBy('id_review', 'desc')->get();
+        $reviews = Review::orderBy('id_review', 'desc');
+
+        if ($request->has('id_pembelian')) {
+            if ($request->id_pembelian > 0){
+                $reviews = $reviews->where('id_pembelian', $request->id_pembelian);
+            }
+        }
+
+        $reviews = $reviews->get();
+
 
         if (count($reviews) > 0) {
             $total_review = 0;
@@ -73,7 +82,6 @@ class ReviewController extends Controller
 
         return response([
             'status' => 404,
-            'data' => $data,
             'message' => 'failed to fetch data'
         ]);
     }
@@ -167,7 +175,6 @@ class ReviewController extends Controller
 
         return response([
             'status' => 404,
-            'data' => $data,
             'message' => 'review detail not found'
         ]);
     }
