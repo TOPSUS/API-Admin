@@ -12,6 +12,8 @@ class DetailPembelian extends Model
 
     protected $table = 'tb_detail_pembelian';
     
+    protected $primaryKey = 'id_detail_pembelian';
+
     protected $dates = ['deleted_at'];
 
     protected $fillable = [

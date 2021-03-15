@@ -205,4 +205,65 @@ class PembelianController extends Controller
             'message' => 'Pembelian tidak ditemukan'
         ]);
     }
+
+    public function showTiket($kode_tiket) {
+        $data = array();
+        $detail = array();
+        $tiket = DetailPembelian::where('kode_tiket', $kode_tiket)->first();
+
+        if (isset($tiket)) {
+            $data['tiket'] = [
+                'id' => $tiket->id_detail_pembelian,
+                'nama' => $tiket->nama_pemegang_tiket,
+                'kode_tiket' => $tiket->kode_tiket,
+                'nomor_id' => $tiket->no_id_card,
+                'status_tiket' => $tiket->status,
+                'harga' => $tiket->harga,
+                'status_order' => $tiket->pembelian->status,
+                'asal' => $tiket->pembelian->jadwal->pelabuhanasal->kode_pelabuhan,
+                'tujuan' => $tiket->pembelian->jadwal->pelabuhantujuan->kode_pelabuhan,
+                'tanggal_berangkat' => date("d F Y", strtotime($tiket->pembelian->jadwal->waktu_berangkat)),
+                'tanggal_sampai' => date("d F Y", strtotime($tiket->pembelian->jadwal->waktu_sampai)),
+                'jam_berangkat' => date("H:i", strtotime($tiket->pembelian->jadwal->waktu_berangkat)),
+                'jam_sampai' => date("H:i", strtotime($tiket->pembelian->jadwal->waktu_sampai))
+            ];
+    
+            return response([
+                'status' => 200,
+                'data' => $data,
+                'message' => 'data fetched'
+            ]);
+        }
+    
+        return response([
+            'status' => 404,
+            'message' => 'Tiket tidak ditemukan'
+        ]);
+    }
+
+    public function approveTiket($id) {
+        $tiket = DetailPembelian::find($id);
+
+        if (isset($tiket)) {
+            if ($tiket->status != "Expired") {
+                $tiket->status = "Used";
+                $tiket->save();
+    
+                return response([
+                    'status' => 200,
+                    'message' => 'Tiket berhasil digunakan!'
+                ]);
+            }
+    
+            return response([
+                'status' => 500,
+                'message' => 'Tiket sudah Hangus!'
+            ]);
+        }
+    
+        return response([
+            'status' => 404,
+            'message' => 'Tiket tidak ditemukan!'
+        ]);
+    }
 }

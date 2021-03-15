@@ -15,7 +15,8 @@
         "laravel/framework": "^7.29",
         "laravel/sanctum": "^2.9",
         "laravel/tinker": "^2.5",
-        "paragonie/random_compat": "2.*"
+        "paragonie/random_compat": "2.*",
+        "simplesoftwareio/simple-qrcode": "~4"
     },
     "require-dev": {
         "facade/ignition": "^2.0",

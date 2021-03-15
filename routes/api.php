@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +26,12 @@ Route::get('unauthenticate', function() {
     ]);
 })->name('unauthenticate');
 
+Route::get('qrcode', function() {
+    $detail = \App\DetailPembelian::where('id_detail_pembelian', 1)->first();
+    $qr = QrCode::size(256)->generate($detail->kode_tiket);
+    echo $qr;
+});
+
 Route::middleware(['auth:sanctum'])->group(function () {
     /* Route for Testing API */
     Route::get('test/data', function(Request $request) {
@@ -41,6 +48,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('transaksi/proses', 'PembelianController@indexProses');
     Route::get('transaksi/done', 'PembelianController@indexDone');
     Route::get('transaksi/detail/{id}', 'PembelianController@detailTransaksi');
+    Route::get('transaksi/tiket/{kode_tiket}', 'PembelianController@showTiket');
+    Route::get('transaksi/tiket/approve/{id}', 'PembelianController@approveTiket');
     Route::get('transaksi/approve/{id}', 'PembelianController@approvePembelian');
 
     /* Jadwal Routes */
