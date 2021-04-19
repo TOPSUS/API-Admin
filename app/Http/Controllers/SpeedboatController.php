@@ -7,8 +7,11 @@ use Illuminate\Http\Request;
 use Validator;
 
 use App\Review;
-use App\Speedboat;
+use App\Kapal;
 use App\BeritaSpeedboat;
+use App\HakAksesKapal;
+
+use Auth;
 
 class SpeedboatController extends Controller
 {
@@ -20,6 +23,34 @@ class SpeedboatController extends Controller
     public function index()
     {
         //
+        $data = array();
+        $id_user = Auth::user()->id;
+        $listKapal = HakAksesKapal::where('id_user', $id_user)->get();
+
+        foreach ($listKapal as $list) {
+            $kapal = Kapal::find($list->id_kapal);
+            $temp = array();
+            if (isset($kapal)) {
+                array_push($temp, [
+                    'id' => $kapal->id,
+                    'nama' => $kapal->nama_kapal,
+                    'kapasitas' => $kapal->kapasitas,
+                    'tipe' => $kapal->tipe_kapal,
+                    'foto' => $kapal->foto,
+                    'golongan' => $kapal->detailGolongan->golongan
+                ]);
+            }
+        }
+
+        $data = [
+            'kapal' => $temp
+        ];
+
+        return response([
+            'status' => 200,
+            'data' => $data,
+            'message' => 'list data kapal fetched'
+        ]);
     }
 
     /**
@@ -161,6 +192,26 @@ class SpeedboatController extends Controller
     public function destroy($id)
     {
         //
+        $kapal = Kapal::find($id);
+
+        if (isset($kapal)) {
+            if ($kapal->delete()) {
+                return response([
+                    'status' => 200,
+                    'message' => 'Success Delete Kapal'
+                ]);
+            }
+
+            return response([
+                'status' => 500,
+                'message' => 'Failed Delete Kapal'
+            ]);
+        }
+
+        return response([
+            'status' => 404,
+            'message' => 'Kapal not Found'
+        ]);
     }
 
     public function berita($id) {

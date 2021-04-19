@@ -17,22 +17,6 @@ class User extends Authenticatable
 
     protected $fillable = [
         'nama', 'alamat', 'jeniskelamin', 'nohp', 'email', 'chat_id', 'pin',
-        'password', 'foto', 'role', 'token_login', 'id_speedboat'
+        'password', 'foto', 'role', 'token_login', 'fcm_token', 'id_speedboat'
     ];
-
-    public function speedboat() {
-        return $this->belongsTo(Speedboat::class, 'id_speedboat');
-    }
-
-    public function pembelian() {
-        return $this->hasMany(Pembelian::class, 'id_pembelian');
-    }
-
-    public function beritaspeedboat() {
-        return $this->hasMany(BeritaSpeedboat::class, 'id_user');
-    }
-
-    public function beritapelabuhan() {
-        return $this->hasMany(BeritaPelabuhan::class, 'id_user');
-    }
 }

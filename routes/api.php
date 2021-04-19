@@ -17,6 +17,7 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 /* Authentication Routes */
 Route::prefix('admin')->group(function () {
     Route::post('login', 'AuthController@login');
+    Route::post('logout', 'AuthController@logout');
 });
 
 Route::get('unauthenticate', function() {
@@ -28,6 +29,12 @@ Route::get('unauthenticate', function() {
 
 Route::get('qrcode', function() {
     $detail = \App\DetailPembelian::where('id_detail_pembelian', 1)->first();
+    $qr = QrCode::size(256)->generate($detail->kode_tiket);
+    echo $qr;
+});
+
+Route::get('qrcode/{id}', function($id) {
+    $detail = \App\DetailPembelian::where('id_detail_pembelian', $id)->first();
     $qr = QrCode::size(256)->generate($detail->kode_tiket);
     echo $qr;
 });
@@ -59,7 +66,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('reward', 'RewardController');
 
     /* Speedboat Routes */
-    Route::resource('speedboat', 'SpeedboatController');
+    Route::resource('kapal', 'SpeedboatController');
     Route::get('speedboat/{id}/berita', 'SpeedboatController@berita');
     Route::get('speedboat/{id}/review', 'SpeedboatController@review');
 
