@@ -73,4 +73,9 @@ Route::middleware(['auth:sanctum'])->group(function () {
     /* Berita Speedboat */
     Route::resource('berita-speedboat', 'BeritaSpeedboatController');
     Route::get('berita-speedboat/{id}/index', 'BeritaSpeedboatController@indexSpeedboat');
+
+    Route::resource('pelabuhan', 'PelabuhanController');
+    Route::get('pelabuhan/get/name', 'PelabuhanController@getPelabuhanName');
+    
+    Route::get('golongan/get/{id}', 'GolonganController@golonganByPelabuhan');
 });
