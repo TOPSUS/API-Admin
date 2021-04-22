@@ -43,7 +43,7 @@ class SpeedboatController extends Controller
         }
 
         $data = [
-            'kapal' => $temp
+            'list_kapal' => $temp
         ];
 
         return response([
@@ -84,18 +84,20 @@ class SpeedboatController extends Controller
     {
         //
         $data = array();
-        $speedboat = Speedboat::find($id);
+        $kapal = Kapal::find($id);
 
-        if (isset($speedboat)) {
-            array_push($data, [
-                'id' => $speedboat->id,
-                'nama' => $speedboat->nama_speedboat,
-                'kapasitas' => $speedboat->kapasitas,
-                'deskripsi' => $speedboat->deskripsi,
-                'contact_service' => $speedboat->contact_service,
-                'tanggal_beroperasi' => $speedboat->tanggal_beroperasi,
-                'foto' => $speedboat->foto
-            ]);
+        if (isset($kapal)) {
+            $data['kapal'] = [
+                'id' => $kapal->id,
+                'nama' => $kapal->nama_kapal,
+                'kapasitas' => $kapal->kapasitas,
+                'tipe' => $kapal->tipe_kapal,
+                'foto' => $kapal->foto,
+                'golongan' => $kapal->detailGolongan->golongan,
+                'deskripsi' => $kapal->deskripsi,
+                'contact' => $kapal->contact_service,
+                'tanggal_beroperasi' => $kapal->tanggal_beroperasi
+            ];
 
             return response([
                 'status' => 200,
