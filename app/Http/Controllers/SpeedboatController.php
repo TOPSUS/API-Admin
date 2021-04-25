@@ -111,7 +111,7 @@ class SpeedboatController extends Controller
 
             $imageKapal->move($destinationPath, $imageName);
             
-            $create->foto = url('image_kapal/images/'.$imageName);
+            $create->foto = $imageName;
         }
         
         if ($create->save()) {
