@@ -10,8 +10,11 @@ use App\Review;
 use App\Kapal;
 use App\BeritaSpeedboat;
 use App\HakAksesKapal;
+use App\DetailGolongan;
+use App\Golongan;
 
 use Auth;
+use Image;
 
 class SpeedboatController extends Controller
 {
@@ -27,9 +30,11 @@ class SpeedboatController extends Controller
         $id_user = Auth::user()->id;
         $listKapal = HakAksesKapal::where('id_user', $id_user)->get();
 
+        // dd(count($listKapal));
+
+        $temp = array();
         foreach ($listKapal as $list) {
             $kapal = Kapal::find($list->id_kapal);
-            $temp = array();
             if (isset($kapal)) {
                 array_push($temp, [
                     'id' => $kapal->id,
@@ -72,6 +77,73 @@ class SpeedboatController extends Controller
     public function store(Request $request)
     {
         //
+        $validator = Validator::make($request->all(), [
+            'nama' => 'required',
+            'kapasitas' => 'required',
+            'deskripsi' => 'required',
+            'contact' => 'required',
+            'tanggal_beroperasi' => 'required',
+            'tipe' => 'required',
+            'golongan' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response([
+                'status' => 500,
+                'message' => 'Validator Fail'
+            ]);
+        }
+
+        $create = new Kapal;
+        $create->nama_kapal = $request->nama;
+        $create->kapasitas = $request->kapasitas;
+        $create->deskripsi = $request->deskripsi;
+        $create->contact_service = $request->contact;
+        $create->tanggal_beroperasi = $request->tanggal_beroperasi;
+        $create->tipe_kapal = strtolower($request->tipe);
+        if ($request->hasFile('image_kapal')) {
+            $imageKapal = $request->file('image_kapal');
+            
+            $imageName = time().'.'.$imageKapal->getClientOriginalExtension();
+
+            /*After Resize Add this Code to Upload Image*/
+            $destinationPath = public_path('image_kapal/images');
+
+            $imageKapal->move($destinationPath, $imageName);
+            
+            $create->foto = url('image_kapal/images/'.$imageName);
+        }
+        
+        if ($create->save()) {
+            $hakAkses = new HakAksesKapal;
+            $hakAkses->id_kapal = $create->id;
+            $hakAkses->hak_akses = 'Admin';
+            $hakAkses->id_user = Auth::user()->id;
+            $hakAkses->save();
+
+
+            $golongan = Golongan::where('golongan', $request->golongan)->first();
+            $detailGolongan = new DetailGolongan;
+            $detailGolongan->id_golongan = $golongan->id;
+            $detailGolongan->id_kapal = $create->id;
+            $detailGolongan->jumlah = 1;
+            if ($detailGolongan->save()) {
+                return response([
+                    'status' => 200,
+                    'message' => 'success create kapal'
+                ]);
+            } else {
+                return response([
+                    'status' => 500,
+                    'message' => 'success create kapal but failed create detail golongan'
+                ]);
+            }
+        } else {
+            return response([
+                'status' => 500,
+                'message' => 'failed to create kapal'
+            ]);
+        }
     }
 
     /**
@@ -96,7 +168,7 @@ class SpeedboatController extends Controller
                 'golongan' => $kapal->detailGolongan->golongan,
                 'deskripsi' => $kapal->deskripsi,
                 'contact' => $kapal->contact_service,
-                'tanggal_beroperasi' => $kapal->tanggal_beroperasi
+                'tanggal_beroperasi' => date('d M Y', strtotime($kapal->tanggal_beroperasi))
             ];
 
             return response([
@@ -139,50 +211,71 @@ class SpeedboatController extends Controller
             'nama' => 'required',
             'kapasitas' => 'required',
             'deskripsi' => 'required',
-            'contact_service' => 'required',
+            'contact' => 'required',
             'tanggal_beroperasi' => 'required',
-            'foto' => 'required'
+            'tipe' => 'required',
+            'golongan' => 'required'
         ]);
 
-        
         if ($validator->fails()) {
             return response([
-                'status' => 400,
-                'data' => $data,
-                'message' => $validator->errors()
+                'status' => 500,
+                'message' => $validator->errors()->first()
             ]);
         }
 
-        $speedboat = Speedboat::find($id);
+        $update = Kapal::find($id);
+        $update->nama_kapal = $request->nama;
+        $update->kapasitas = $request->kapasitas;
+        $update->deskripsi = $request->deskripsi;
+        $update->contact_service = $request->contact;
+        $update->tanggal_beroperasi = $request->tanggal_beroperasi;
+        $update->tipe_kapal = strtolower($request->tipe);
+        if ($request->hasFile('image_kapal')) {
+            $imageKapal = $request->file('image_kapal');
+            
+            $imageName = time().'.'.$imageKapal->getClientOriginalExtension();
 
-        if (isset($speedboat)) {
-            $speedboat->nama_speedboat = $request->nama;
-            $speedboat->kapasitas = $request->kapasitas;
-            $speedboat->deskripsi = $request->deskripsi;
-            $speedboat->contact_service = $request->contact_service;
-            $speedboat->tanggal_beroperasi = $request->tanggal_beroperasi;
-            $speedboat->foto = $request->foto;
+            /*After Resize Add this Code to Upload Image*/
+            $destinationPath = public_path('image_kapal/images');
 
-            if ($speedboat->save()) {
-                return response([
-                    'status' => 200,
-                    'data' => $data,
-                    'message' => 'Successfully Update Speedboat'
-                ]);
-            }
-   
-            return response([
-                'status' => 500,
-                'data' => $data,
-                'message' => 'Failed Update Speedboat'
-            ]);
+            $imageKapal->move($destinationPath, $imageName);
+            
+            // $update->foto = url('image_kapal/images/'.$imageName);
+            $update->foto = $imageName;
         }
         
-        return response([
-            'status' => 404,
-            'data' => $data,
-            'message' => 'Speedboat not Found'
-        ]);
+        if ($update->save()) {
+            $golongan = Golongan::where('golongan', $request->golongan)->first();
+            $checkDetailGolongan = DetailGolongan::where('id_kapal', $update->id)->first();
+
+            if (isset($checkDetailGolongan)) {
+                $detailGolongan = DetailGolongan::find($checkDetailGolongan->id);
+            } else {
+                $detailGolongan = new DetailGolongan;
+            }
+
+            $detailGolongan->id_golongan = $golongan->id;
+            $detailGolongan->id_kapal = $update->id;
+            $detailGolongan->jumlah = 1;
+
+            if ($detailGolongan->save()) {
+                return response([
+                    'status' => 200,
+                    'message' => 'success update kapal'
+                ]);
+            } else {
+                return response([
+                    'status' => 500,
+                    'message' => 'success update kapal but failed update detail golongan'
+                ]);
+            }
+        } else {
+            return response([
+                'status' => 500,
+                'message' => 'failed to update kapal'
+            ]);
+        }
     }
 
     /**

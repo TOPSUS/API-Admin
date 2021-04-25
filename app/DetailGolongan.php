@@ -13,6 +13,8 @@ class DetailGolongan extends Model
         'id_golongan', 'id_kapal', 'jumlah'
     ];
 
+    public $timestamps = false;
+    
     public function kapal() {
         return $this->belongsTo(Kapal::class, 'id_kapal');
     }

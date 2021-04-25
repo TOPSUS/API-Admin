@@ -78,5 +78,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('pelabuhan/get/name', 'PelabuhanController@getPelabuhanName');
     
     Route::get('golongan/get/{id}', 'GolonganController@golonganByPelabuhan');
+    
     Route::get('user/get/{id}', 'UserController@edit');
 });
