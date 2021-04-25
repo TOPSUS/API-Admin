@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\User;
 
 class UserController extends Controller
 {
@@ -56,7 +57,32 @@ class UserController extends Controller
      */
     public function edit($id)
     {
-        //
+        $data = array();
+        $user = User::find($id);
+
+        if (isset($user)) {
+            $data['user'] = [
+                'id' => $user->id,
+                'foto' => $user->foto,
+                'nama' => $user->nama,
+                'alamat' => $user->alamat,
+                'jeniskelamin' => $user->jeniskelamin,
+                'nohp' => $user->nohp,
+                'email' => $user->email,
+            ];
+
+            return response([
+                'status' => 200,
+                'data' => $data,
+                'message' => 'data user fetched'
+            ]);
+        }
+        
+        return response([
+            'status' => 404,
+            'data' => $data,
+            'message' => 'user not found'
+        ]);
     }
 
     /**
