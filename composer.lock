@@ -5195,6 +5195,7 @@
         },
         {
             "name": "facade/ignition",
+<<<<<<< HEAD
             "version": "2.4.2",
             "source": {
                 "type": "git",
@@ -5205,13 +5206,30 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/facade/ignition/zipball/2179568bdfddfa56c90c845a0be1a0b52adbf52a",
                 "reference": "2179568bdfddfa56c90c845a0be1a0b52adbf52a",
+=======
+            "version": "2.8.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/facade/ignition.git",
+                "reference": "a8201d51aae83addceaef9344592a3b068b5d64d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/facade/ignition/zipball/a8201d51aae83addceaef9344592a3b068b5d64d",
+                "reference": "a8201d51aae83addceaef9344592a3b068b5d64d",
+>>>>>>> 14c0ded494c570ba781f100e32b1e6bbcb8f7178
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-mbstring": "*",
+<<<<<<< HEAD
                 "facade/flare-client-php": "^1.0",
                 "facade/ignition-contracts": "^1.0",
+=======
+                "facade/flare-client-php": "^1.6",
+                "facade/ignition-contracts": "^1.0.2",
+>>>>>>> 14c0ded494c570ba781f100e32b1e6bbcb8f7178
                 "filp/whoops": "^2.4",
                 "illuminate/support": "^7.0|^8.0",
                 "monolog/monolog": "^2.0",
@@ -5269,7 +5287,11 @@
                 "issues": "https://github.com/facade/ignition/issues",
                 "source": "https://github.com/facade/ignition"
             },
+<<<<<<< HEAD
             "time": "2021-03-08T13:56:01+00:00"
+=======
+            "time": "2021-04-09T20:45:59+00:00"
+>>>>>>> 14c0ded494c570ba781f100e32b1e6bbcb8f7178
         },
         {
             "name": "facade/ignition-contracts",
@@ -6064,6 +6086,7 @@
         },
         {
             "name": "phpunit/php-code-coverage",
+<<<<<<< HEAD
             "version": "7.0.14",
             "source": {
                 "type": "git",
@@ -6074,6 +6097,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/bb7c9a210c72e4709cdde67f8b7362f672f2225c",
                 "reference": "bb7c9a210c72e4709cdde67f8b7362f672f2225c",
+=======
+            "version": "9.2.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/php-code-coverage.git",
+                "reference": "f6293e1b30a2354e8428e004689671b83871edde"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/php-code-coverage/zipball/f6293e1b30a2354e8428e004689671b83871edde",
+                "reference": "f6293e1b30a2354e8428e004689671b83871edde",
+>>>>>>> 14c0ded494c570ba781f100e32b1e6bbcb8f7178
                 "shasum": ""
             },
             "require": {
@@ -6125,7 +6160,11 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/php-code-coverage/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/7.0.14"
+=======
+                "source": "https://github.com/sebastianbergmann/php-code-coverage/tree/9.2.6"
+>>>>>>> 14c0ded494c570ba781f100e32b1e6bbcb8f7178
             },
             "funding": [
                 {
@@ -6133,7 +6172,11 @@
                     "type": "github"
                 }
             ],
+<<<<<<< HEAD
             "time": "2020-12-02T13:39:03+00:00"
+=======
+            "time": "2021-03-28T07:26:59+00:00"
+>>>>>>> 14c0ded494c570ba781f100e32b1e6bbcb8f7178
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -6361,6 +6404,7 @@
         },
         {
             "name": "phpunit/phpunit",
+<<<<<<< HEAD
             "version": "8.5.15",
             "source": {
                 "type": "git",
@@ -6371,6 +6415,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/038d4196d8e8cb405cd5e82cedfe413ad6eef9ef",
                 "reference": "038d4196d8e8cb405cd5e82cedfe413ad6eef9ef",
+=======
+            "version": "9.5.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/phpunit.git",
+                "reference": "c73c6737305e779771147af66c96ca6a7ed8a741"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c73c6737305e779771147af66c96ca6a7ed8a741",
+                "reference": "c73c6737305e779771147af66c96ca6a7ed8a741",
+>>>>>>> 14c0ded494c570ba781f100e32b1e6bbcb8f7178
                 "shasum": ""
             },
             "require": {
@@ -6442,7 +6498,11 @@
             ],
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
+<<<<<<< HEAD
                 "source": "https://github.com/sebastianbergmann/phpunit/tree/8.5.15"
+=======
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/9.5.4"
+>>>>>>> 14c0ded494c570ba781f100e32b1e6bbcb8f7178
             },
             "funding": [
                 {
@@ -6454,7 +6514,11 @@
                     "type": "github"
                 }
             ],
+<<<<<<< HEAD
             "time": "2021-03-17T07:27:54+00:00"
+=======
+            "time": "2021-03-23T07:16:29+00:00"
+>>>>>>> 14c0ded494c570ba781f100e32b1e6bbcb8f7178
         },
         {
             "name": "scrivo/highlight.php",
