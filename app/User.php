@@ -19,4 +19,8 @@ class User extends Authenticatable
         'nama', 'alamat', 'jeniskelamin', 'nohp', 'email', 'chat_id', 'pin',
         'password', 'foto', 'role', 'token_login', 'fcm_token', 'id_speedboat'
     ];
+
+    public function hakAksesKapal() {
+        return $this->hasMany(HakAksesKapal::class, 'id_user');
+    }
 }
