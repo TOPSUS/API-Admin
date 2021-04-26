@@ -69,6 +69,7 @@ class UserController extends Controller
                 'jeniskelamin' => $user->jeniskelamin,
                 'nohp' => $user->nohp,
                 'email' => $user->email,
+                'role' => $user->role
             ];
 
             return response([
@@ -95,6 +96,44 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $user = User::find($id);
+        if (isset($user)) {
+            $user->nama = $request->nama;
+            $user->alamat = $request->alamat;
+            $user->jeniskelamin = $request->jeniskelamin;
+            $user->nohp = $request->nohp;
+            $user->email = $request->email;
+            
+            if ($request->hasFile('foto')) {
+                $fotoUser = $request->file('foto');
+                
+                $fotoName = time().'.'.$fotoUser->getClientOriginalExtension();
+    
+                /*After Resize Add this Code to Upload Image*/
+                    $destinationPath = public_path('user/images');
+    
+                $fotoUser->move($destinationPath, $fotoName);
+                
+                $user->foto = $fotoName;
+            }
+            
+            if ($user->save()) {
+                return response([
+                    'status' => 200,
+                    'message' => 'Profile Updated'
+                ]);
+            }
+            
+            return response([
+                'status' => 500,
+                'message' => 'Profile Failed to Update'
+            ]);
+        }
+            
+        return response([
+            'status' => 404,
+            'message' => 'User not found'
+        ]);
     }
 
     /**

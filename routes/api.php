@@ -66,7 +66,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('reward', 'RewardController');
 
     /* Speedboat Routes */
-    Route::resource('kapal', 'SpeedboatController');
+    Route::get('kapal', 'SpeedboatController@index');
+    Route::get('kapal/show/{kapal}', 'SpeedboatController@show');
+    Route::get('kapal/{kapal}', 'SpeedboatController@destroy');
+    Route::post('kapal', 'SpeedboatController@store');
+    Route::post('kapal/update/{kapal}', 'SpeedboatController@update');
     Route::get('speedboat/{id}/berita', 'SpeedboatController@berita');
     Route::get('speedboat/{id}/review', 'SpeedboatController@review');
 
@@ -80,4 +84,5 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('golongan/get/{id}', 'GolonganController@golonganByPelabuhan');
     
     Route::get('user/get/{id}', 'UserController@edit');
+    Route::post('user/update/{id}', 'UserController@update');
 });

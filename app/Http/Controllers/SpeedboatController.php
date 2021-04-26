@@ -225,6 +225,12 @@ class SpeedboatController extends Controller
         }
 
         $update = Kapal::find($id);
+        if (!isset($update)) {
+            return response([
+                'status' => 404,
+                'message' => "Kapal not Found or Deleted"
+            ]);
+        }
         $update->nama_kapal = $request->nama;
         $update->kapasitas = $request->kapasitas;
         $update->deskripsi = $request->deskripsi;
