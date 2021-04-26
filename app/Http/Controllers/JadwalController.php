@@ -8,6 +8,8 @@ use Validator;
 
 use App\Jadwal;
 
+use Auth;
+
 class JadwalController extends Controller
 {
     /**
@@ -18,21 +20,35 @@ class JadwalController extends Controller
     public function index()
     {
         //
+        $idKapals = array();
+        $hakAksesKapal = Auth::user()->hakAksesKapal;
+
+        foreach ($hakAksesKapal as $hakAkses) {
+            array_push($idKapals, $hakAkses->id_kapal);
+        }
+
         $data = array();
-        $jadwals = Jadwal::all();
+        $jadwals = Jadwal::whereIn('id_kapal', $idKapals)->get();
+
 
         if (count($jadwals) > 0) {
+            $temp = array();
             foreach ($jadwals as $jadwal) {
-                array_push($data, [
+                array_push($temp, [
                     'id' => $jadwal->id,
-                    'waktu_berangkat' => $jadwal->waktu_berangkat,
-                    'waktu_sampai' => $jadwal->waktu_sampai,
-                    'harga' => $jadwal->harga,
-                    'asal' => $jadwal->pelabuhanasal->nama_pelabuhan,
-                    'tujuan' => $jadwal->pelabuhantujuan->nama_pelabuhan,
-                    'speedboat' => $jadwal->speedboat->nama_speedboat
+                    'nama_kapal' => $jadwal->kapal->nama_kapal,
+                    'tanggal' => $jadwal->tanggal,
+                    'waktu' => $jadwal->waktu_berangkat,
+                    'estimasi_waktu' => $jadwal->estimasi_waktu,
+                    'nama_tujuan' => $jadwal->pelabuhantujuan->nama_pelabuhan,
+                    'nama_asal' => $jadwal->pelabuhanasal->nama_pelabuhan,
+                    'kode_tujuan' => $jadwal->pelabuhantujuan->kode_pelabuhan,
+                    'kode_asal' => $jadwal->pelabuhanasal->kode_pelabuhan,
+                    'harga' => $jadwal->harga
                 ]);
             }
+
+            $data['list_jadwal'] = $temp;
 
             return response([
                 'status' => 200,
