@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Hash;
 use App\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ChangePass;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -58,5 +61,60 @@ class AuthController extends Controller
             'status' => 404,
             'message' =>'user not found',
         ]);
+    }
+
+    public function getCodes(Request $request){
+        $user = User::where('email',$request->email)->first();
+        if(!$user){
+            return response([
+                'status' => 404,
+                'message' =>'Email Not Found',
+            ]);
+        }
+        $code = Str::random(5);
+        $user->kode_verifikasi_email = $code;
+        $user->update();
+
+        Mail::to($user->email)->send(new ChangePass($user));
+        return response([
+            'status' => 200,
+            'message' => 'Please Check Your Email',
+        ]);
+    }
+
+    public function cekCodes(Request $request){
+        $user = User::where('kode_verifikasi_email', $request->kode)->first();
+        if(!$user){
+            return response([
+                'status' => 404,
+                'message' =>'Kode yang Anda Masukan Salah',
+            ]);
+        }
+        $data['email'] = [
+            'email' => $user->email,
+        ];
+        return response([
+            'status' => 200,
+            'message' => 'Silahkan Ganti Password Anda',
+            'data' => $data,
+        ]);
+    }
+
+    public function gantiPass(Request $request){
+        $user = User::where('email', $request->email)->first();
+        if (! $user || ! Hash::check($request->oldpass, $user->password)) {
+            return response([
+                'status' => 404,
+                'message' => "User not Found"
+            ]);
+        }
+        $user->password = Hash::make($request->newpass);
+        $user->update();
+
+        return response([
+            'status' => 200,
+            'message' => 'Password Berhasil Diganti',
+        ]);
+
     }
 }

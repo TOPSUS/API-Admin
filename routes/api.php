@@ -18,6 +18,9 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 Route::prefix('admin')->group(function () {
     Route::post('login', 'AuthController@login');
     Route::post('logout', 'AuthController@logout');
+    Route::post('getcode', 'AuthController@getCodes');
+    Route::post('cekcode', 'AuthController@cekCodes');
+    Route::post('gantipass', 'AuthController@gantiPass');
 });
 
 Route::get('unauthenticate', function() {
