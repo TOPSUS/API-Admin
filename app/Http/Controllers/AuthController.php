@@ -7,6 +7,7 @@ use Hash;
 use App\User;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ChangePass;
+use Validator;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -100,7 +101,7 @@ class AuthController extends Controller
         ]);
     }
 
-    public function gantiPass(Request $request){
+    public function forgotPass(Request $request){
         $user = User::where('email', $request->email)->first();
         if (! $user || ! Hash::check($request->oldpass, $user->password)) {
             return response([
@@ -116,5 +117,36 @@ class AuthController extends Controller
             'message' => 'Password Berhasil Diganti',
         ]);
 
+    }
+
+    public function gantiPass(Request $request){
+        $validator = Validator::make($request->all(), [
+            'oldpass' => 'required',
+            'newpass' => 'required|same:confirmpass',
+            'confirmpass' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response([
+                'status' => 500,
+                'message' => $validator->errors()->first()
+            ]);
+        }
+        $user = User::where('email',$request->email)->first();
+        
+        if (! $user || ! Hash::check($request->oldpass, $user->password)) {
+            return response([
+                'status' => 404,
+                'message' => "User not Found"
+            ]);
+        }
+        $password = Hash::make($request->newpass);
+        $user->password = $password;
+        $user->update();
+
+        return response([
+            'status'=>200,
+            'message'=>"Berhasil Merubah Password"
+        ]);
     }
 }

@@ -20,7 +20,7 @@ Route::prefix('admin')->group(function () {
     Route::post('logout', 'AuthController@logout');
     Route::post('getcode', 'AuthController@getCodes');
     Route::post('cekcode', 'AuthController@cekCodes');
-    Route::post('gantipass', 'AuthController@gantiPass');
+    Route::post('forgotpass', 'AuthController@forgotPass');
 });
 
 Route::get('unauthenticate', function() {
@@ -82,4 +82,6 @@ Route::middleware(['auth:sanctum'])->group(function () {
     
     Route::get('golongan/get/{id}', 'GolonganController@golonganByPelabuhan');
     Route::get('user/get/{id}', 'UserController@edit');
+
+    Route::post('gantipass','AuthController@gantiPass');
 });
