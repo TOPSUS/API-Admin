@@ -90,7 +90,7 @@ class AuthController extends Controller
                 'message' =>'Kode yang Anda Masukan Salah',
             ]);
         }
-        $data['email'] = [
+        $data['user'] = [
             'email' => $user->email,
         ];
         return response([
