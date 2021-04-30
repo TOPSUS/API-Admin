@@ -103,13 +103,25 @@ class AuthController extends Controller
 
     public function forgotPass(Request $request){
         $user = User::where('email', $request->email)->first();
-        if (! $user || ! Hash::check($request->oldpass, $user->password)) {
+        $validator = Validator::make($request->all(), [
+            'newpass' => 'required|same:confirmpass',
+            'confirmpass' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response([
+                'status' => 500,
+                'message' => $validator->errors()->first()
+            ]);
+        }
+        if (! $user) {
             return response([
                 'status' => 404,
                 'message' => "User not Found"
             ]);
         }
-        $user->password = Hash::make($request->newpass);
+        $password = Hash::make($request->newpass);
+        $user->password = $password;
         $user->update();
 
         return response([
@@ -132,9 +144,9 @@ class AuthController extends Controller
                 'message' => $validator->errors()->first()
             ]);
         }
-        $user = User::where('email',$request->email)->first();
+        $user = User::where('id',$request->id)->first();
         
-        if (! $user || ! Hash::check($request->oldpass, $user->password)) {
+        if (! $user ) {
             return response([
                 'status' => 404,
                 'message' => "User not Found"
