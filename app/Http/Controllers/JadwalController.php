@@ -128,11 +128,12 @@ class JadwalController extends Controller
             array_push($data, [
                 'id' => $jadwal->id,
                 'waktu_berangkat' => $jadwal->waktu_berangkat,
-                'waktu_sampai' => $jadwal->waktu_sampai,
                 'harga' => $jadwal->harga,
                 'asal' => $jadwal->id_asal_pelabuhan,
                 'tujuan' => $jadwal->id_tujuan_pelabuhan,
-                'speedboat' => $jadwal->id_speedboat
+                'estimasi' => $jadwal->estimasi_waktu,
+                'id_kapal' => $jadwal->id_kapal,
+                'tanggal' => $jadwal->tanggal
             ]);
 
             return response([
