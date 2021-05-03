@@ -55,6 +55,12 @@ class JadwalController extends Controller
                 'data' => $data,
                 'message' => 'data index fetched'
             ]);
+        } else {
+            return response([
+                'status' => 200,
+                'data' => $data,
+                'message' => 'data index fetched'
+            ]);
         }
         
         return response([
