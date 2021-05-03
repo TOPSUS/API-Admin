@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Hash;
 use App\User;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ChangePass;
+use Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -57,6 +61,104 @@ class AuthController extends Controller
         return response([
             'status' => 404,
             'message' =>'user not found',
+        ]);
+    }
+
+    public function getCodes(Request $request){
+        $user = User::where('email',$request->email)->first();
+        if(!$user){
+            return response([
+                'status' => 404,
+                'message' =>'Email Not Found',
+            ]);
+        }
+        $code = Str::random(5);
+        $user->kode_verifikasi_email = $code;
+        $user->update();
+
+        Mail::to($user->email)->send(new ChangePass($user));
+        return response([
+            'status' => 200,
+            'message' => 'Please Check Your Email',
+        ]);
+    }
+
+    public function cekCodes(Request $request){
+        $user = User::where('kode_verifikasi_email', $request->kode)->first();
+        if(!$user){
+            return response([
+                'status' => 404,
+                'message' =>'Kode yang Anda Masukan Salah',
+            ]);
+        }
+        $data['user'] = [
+            'email' => $user->email,
+        ];
+        return response([
+            'status' => 200,
+            'message' => 'Silahkan Ganti Password Anda',
+            'data' => $data,
+        ]);
+    }
+
+    public function forgotPass(Request $request){
+        $user = User::where('email', $request->email)->first();
+        $validator = Validator::make($request->all(), [
+            'newpass' => 'required|same:confirmpass',
+            'confirmpass' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response([
+                'status' => 500,
+                'message' => $validator->errors()->first()
+            ]);
+        }
+        if (! $user) {
+            return response([
+                'status' => 404,
+                'message' => "User not Found"
+            ]);
+        }
+        $password = Hash::make($request->newpass);
+        $user->password = $password;
+        $user->update();
+
+        return response([
+            'status' => 200,
+            'message' => 'Password Berhasil Diganti',
+        ]);
+
+    }
+
+    public function gantiPass(Request $request){
+        $validator = Validator::make($request->all(), [
+            'oldpass' => 'required',
+            'newpass' => 'required|same:confirmpass',
+            'confirmpass' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response([
+                'status' => 500,
+                'message' => $validator->errors()->first()
+            ]);
+        }
+        $user = User::where('id',$request->id)->first();
+        
+        if (! $user ) {
+            return response([
+                'status' => 404,
+                'message' => "User not Found"
+            ]);
+        }
+        $password = Hash::make($request->newpass);
+        $user->password = $password;
+        $user->update();
+
+        return response([
+            'status'=>200,
+            'message'=>"Berhasil Merubah Password"
         ]);
     }
 }
