@@ -29,44 +29,29 @@ class JadwalController extends Controller
 
         $data = array();
         $jadwals = Jadwal::whereIn('id_kapal', $idKapals)->get();
-
-
-        if (count($jadwals) > 0) {
-            $temp = array();
-            foreach ($jadwals as $jadwal) {
-                array_push($temp, [
-                    'id' => $jadwal->id,
-                    'nama_kapal' => $jadwal->kapal->nama_kapal,
-                    'tanggal' => $jadwal->tanggal,
-                    'waktu' => $jadwal->waktu_berangkat,
-                    'estimasi_waktu' => $jadwal->estimasi_waktu,
-                    'nama_tujuan' => $jadwal->pelabuhantujuan->nama_pelabuhan,
-                    'nama_asal' => $jadwal->pelabuhanasal->nama_pelabuhan,
-                    'kode_tujuan' => $jadwal->pelabuhantujuan->kode_pelabuhan,
-                    'kode_asal' => $jadwal->pelabuhanasal->kode_pelabuhan,
-                    'harga' => $jadwal->harga
-                ]);
-            }
-
-            $data['list_jadwal'] = $temp;
-
-            return response([
-                'status' => 200,
-                'data' => $data,
-                'message' => 'data index fetched'
-            ]);
-        } else {
-            return response([
-                'status' => 200,
-                'data' => $data,
-                'message' => 'data index fetched'
+        
+        $temp = array();
+        foreach ($jadwals as $jadwal) {
+            array_push($temp, [
+                'id' => $jadwal->id,
+                'nama_kapal' => $jadwal->kapal->nama_kapal,
+                'tanggal' => $jadwal->tanggal,
+                'waktu' => $jadwal->waktu_berangkat,
+                'estimasi_waktu' => $jadwal->estimasi_waktu,
+                'nama_tujuan' => $jadwal->pelabuhantujuan->nama_pelabuhan,
+                'nama_asal' => $jadwal->pelabuhanasal->nama_pelabuhan,
+                'kode_tujuan' => $jadwal->pelabuhantujuan->kode_pelabuhan,
+                'kode_asal' => $jadwal->pelabuhanasal->kode_pelabuhan,
+                'harga' => $jadwal->harga
             ]);
         }
-        
+
+        $data['list_jadwal'] = $temp;
+
         return response([
-            'status' => 404,
+            'status' => 200,
             'data' => $data,
-            'message' => 'failed to fetch data index'
+            'message' => 'data index fetched'
         ]);
     }
 
