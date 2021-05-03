@@ -125,7 +125,7 @@ class JadwalController extends Controller
         $jadwal = Jadwal::find($id);
 
         if (isset($jadwal)) {
-            array_push($data, [
+            $data['jadwal'] = [
                 'id' => $jadwal->id,
                 'waktu_berangkat' => $jadwal->waktu_berangkat,
                 'harga' => $jadwal->harga,
@@ -134,7 +134,7 @@ class JadwalController extends Controller
                 'estimasi' => $jadwal->estimasi_waktu,
                 'id_kapal' => $jadwal->id_kapal,
                 'tanggal' => $jadwal->tanggal
-            ]);
+            ];
 
             return response([
                 'status' => 200,
