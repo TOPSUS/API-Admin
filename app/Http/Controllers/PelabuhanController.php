@@ -104,4 +104,29 @@ class PelabuhanController extends Controller
             'message' => 'Successfully Fetch Pelabuhan'
         ]);
     }
+
+    public function getPelabuhan() {
+        $data = array();
+        
+        $pelabuhans = Pelabuhan::all();
+
+        $temp = array(); 
+        
+        foreach ($pelabuhans as $pelabuhan) {
+            array_push($temp, [
+                'id' => $pelabuhan->id,
+                'text' => $pelabuhan->nama_pelabuhan
+            ]);
+        }
+
+        $data = [
+            'dropdown' => $temp
+        ];
+
+        return response([
+            'status' => 200,
+            'data' => $data,
+            'message' => 'list data pelabuhan fetched'
+        ]);
+    }
 }

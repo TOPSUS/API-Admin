@@ -80,6 +80,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::resource('pelabuhan', 'PelabuhanController');
     Route::get('pelabuhan/get/name', 'PelabuhanController@getPelabuhanName');
+    Route::get('get/pelabuhan', 'PelabuhanController@getPelabuhan');
     
     Route::get('golongan/get/{id}', 'GolonganController@golonganByPelabuhan');
     Route::get('user/get/{id}', 'UserController@edit');
