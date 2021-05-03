@@ -388,14 +388,14 @@ class SpeedboatController extends Controller
                 if ($list->id_kapal == $kapal->id) {
                     array_push($temp, [
                         'id' => $kapal->id,
-                        'nama' => $kapal->nama_kapal
+                        'text' => $kapal->nama_kapal
                     ]);
                 }
             }
         }
 
         $data = [
-            'list_kapal' => $temp
+            'dropdown' => $temp
         ];
 
         return response([
