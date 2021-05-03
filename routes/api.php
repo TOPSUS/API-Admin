@@ -72,6 +72,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::resource('kapal', 'SpeedboatController');
     Route::get('speedboat/{id}/berita', 'SpeedboatController@berita');
     Route::get('speedboat/{id}/review', 'SpeedboatController@review');
+    Route::get('get/user/kapal', 'SpeedboatController@getUserKapal');
 
     /* Berita Speedboat */
     Route::resource('berita-speedboat', 'BeritaSpeedboatController');

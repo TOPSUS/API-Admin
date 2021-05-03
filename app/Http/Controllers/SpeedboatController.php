@@ -366,4 +366,35 @@ class SpeedboatController extends Controller
             'message' => 'Review Speedboat not Found'
         ]);
     }
+
+    public function getUserKapal() {
+        $data = array();
+
+        $user = Auth::user();
+        $listKapal = $user->hakAksesKapal;
+        $dataKapal = Kapal::all();
+
+        $temp = array(); 
+        
+        foreach ($listKapal as $list) {
+            foreach ($dataKapal as $kapal) {
+                if ($list->id_kapal == $kapal->id) {
+                    array_push($temp, [
+                        'id' => $kapal->id,
+                        'nama' => $kapal->nama_kapal
+                    ]);
+                }
+            }
+        }
+
+        $data = [
+            'list_kapal' => $temp
+        ];
+
+        return response([
+            'status' => 200,
+            'data' => $data,
+            'message' => 'list data kapal fetched'
+        ]);
+    }
 }
