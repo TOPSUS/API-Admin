@@ -230,5 +230,25 @@ class JadwalController extends Controller
     public function destroy($id)
     {
         //
+        $jadwal = Jadwal::find($id);
+
+        if (isset($jadwal)) {
+            if ($jadwal->delete()) {
+                return response([
+                    'status' => 200,
+                    'message' => 'Success Delete jadwal'
+                ]);
+            }
+
+            return response([
+                'status' => 500,
+                'message' => 'Failed Delete jadwal'
+            ]);
+        }
+
+        return response([
+            'status' => 404,
+            'message' => 'jadwal not Found'
+        ]);
     }
 }
