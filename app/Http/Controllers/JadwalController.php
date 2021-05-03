@@ -74,6 +74,42 @@ class JadwalController extends Controller
     public function store(Request $request)
     {
         //
+        $validator = Validator::make($request->all(), [
+            'kapal' => 'required',
+            'asal' => 'required',
+            'tujuan' => 'required',
+            'tanggal' => 'required',
+            'waktu' => 'required',
+            'estimasi' => 'required',
+            'harga' => 'required'
+        ]);
+
+        if ($validator->fails()) {
+            return response([
+                'status' => 500,
+                'message' => 'Validator Fail'
+            ]);
+        }
+
+        $create = new Jadwal;
+        $create->waktu_berangkat = $request->waktu;
+        $create->id_asal_pelabuhan = $request->asal;
+        $create->id_tujuan_pelabuhan = $request->tujuan;
+        $create->estimasi_waktu = $request->estimasi;
+        $create->id_kapal = $request->kapal;
+        $create->tanggal = $request->tanggal;
+        $create->harga = $request->harga;
+        if ($create->save()) {
+            return response([
+                'status' => 200,
+                'message' => 'success create jadwal'
+            ]);
+        } else {
+            return response([
+                'status' => 500,
+                'message' => 'failed create jadwal'
+            ]);
+        }
     }
 
     /**
