@@ -93,10 +93,14 @@ class PembelianController extends Controller
         return $this->getPembelian('Terkonfirmasi');
     }
 
+    public function indexAll() {
+        return $this->getPembelian('all');
+    }
+
     private function getPembelian($tipe) {
         $data = array();
         $detail = array();
-        $pembelians = Pembelian::where('status', '=', $tipe)->get();
+        $pembelians = Pembelian::get();
 
         if (count($pembelians) > 0) {
             foreach($pembelians as $pembelian) {

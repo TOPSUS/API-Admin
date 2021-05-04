@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+
+use App\Golongan;
 use App\Pelabuhan;
 
-class PelabuhanController extends Controller
+class GolonganController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -83,50 +85,36 @@ class PelabuhanController extends Controller
         //
     }
 
-    public function getPelabuhanName() {
-        $pelabuhans = Pelabuhan::all();
+    public function golonganByPelabuhan($id) {
+        $pelabuhan = Pelabuhan::where('nama_pelabuhan', $id)->first();
 
         $data = array();
-        $temp = array();
 
-        foreach ($pelabuhans as $pelabuhan) {
-            array_push($temp, [
-                'id' => $pelabuhan->id,
-                'nama' => $pelabuhan->nama_pelabuhan
+        if (isset($pelabuhan)) {
+            $golongans = Golongan::where('id_pelabuhan', $pelabuhan->id)->get();
+
+            $temp = array();
+            
+            foreach($golongans as $golongan) {
+                array_push($temp, [
+                    'id' => $golongan->id,
+                    'golongan' => $golongan->golongan,
+                    'harga' => $golongan->harga
+                ]);
+            }
+
+            $data['golongan'] = $temp;
+            
+            return response([
+                'status' => 200,
+                'data' => $data,
+                'message' => 'Successfully fetch golongan'
             ]);
         }
-
-        $data['pelabuhan'] = $temp;
-
+            
         return response([
-            'status' => 200,
-            'data' => $data,
-            'message' => 'Successfully Fetch Pelabuhan'
-        ]);
-    }
-
-    public function getPelabuhan() {
-        $data = array();
-        
-        $pelabuhans = Pelabuhan::all();
-
-        $temp = array(); 
-        
-        foreach ($pelabuhans as $pelabuhan) {
-            array_push($temp, [
-                'id' => $pelabuhan->id,
-                'text' => $pelabuhan->nama_pelabuhan
-            ]);
-        }
-
-        $data = [
-            'dropdown' => $temp
-        ];
-
-        return response([
-            'status' => 200,
-            'data' => $data,
-            'message' => 'list data pelabuhan fetched'
+            'status' => 500,
+            'message' => 'pelabuhan not found'
         ]);
     }
 }

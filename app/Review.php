@@ -23,8 +23,4 @@ class Review extends Model
     public function pembelian() {
         return $this->belongsTo(Pembelian::class, 'id_pembelian');
     }
-
-    public function speedboat() {
-        return $this->belongsTo(Speedboat::class, 'id_speedboat');
-    }
 }
