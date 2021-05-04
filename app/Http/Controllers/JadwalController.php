@@ -8,8 +8,6 @@ use Validator;
 
 use App\Jadwal;
 
-use Auth;
-
 class JadwalController extends Controller
 {
     /**
@@ -20,38 +18,33 @@ class JadwalController extends Controller
     public function index()
     {
         //
-        $idKapals = array();
-        $hakAksesKapal = Auth::user()->hakAksesKapal;
-
-        foreach ($hakAksesKapal as $hakAkses) {
-            array_push($idKapals, $hakAkses->id_kapal);
-        }
-
         $data = array();
-        $jadwals = Jadwal::whereIn('id_kapal', $idKapals)->get();
-        
-        $temp = array();
-        foreach ($jadwals as $jadwal) {
-            array_push($temp, [
-                'id' => $jadwal->id,
-                'nama_kapal' => $jadwal->kapal->nama_kapal,
-                'tanggal' => $jadwal->tanggal,
-                'waktu' => $jadwal->waktu_berangkat,
-                'estimasi_waktu' => $jadwal->estimasi_waktu,
-                'nama_tujuan' => $jadwal->pelabuhantujuan->nama_pelabuhan,
-                'nama_asal' => $jadwal->pelabuhanasal->nama_pelabuhan,
-                'kode_tujuan' => $jadwal->pelabuhantujuan->kode_pelabuhan,
-                'kode_asal' => $jadwal->pelabuhanasal->kode_pelabuhan,
-                'harga' => $jadwal->harga
+        $jadwals = Jadwal::all();
+
+        if (count($jadwals) > 0) {
+            foreach ($jadwals as $jadwal) {
+                array_push($data, [
+                    'id' => $jadwal->id,
+                    'waktu_berangkat' => $jadwal->waktu_berangkat,
+                    'waktu_sampai' => $jadwal->waktu_sampai,
+                    'harga' => $jadwal->harga,
+                    'asal' => $jadwal->pelabuhanasal->nama_pelabuhan,
+                    'tujuan' => $jadwal->pelabuhantujuan->nama_pelabuhan,
+                    'speedboat' => $jadwal->speedboat->nama_speedboat
+                ]);
+            }
+
+            return response([
+                'status' => 200,
+                'data' => $data,
+                'message' => 'data index fetched'
             ]);
         }
-
-        $data['list_jadwal'] = $temp;
-
+        
         return response([
-            'status' => 200,
+            'status' => 404,
             'data' => $data,
-            'message' => 'data index fetched'
+            'message' => 'failed to fetch data index'
         ]);
     }
 
@@ -74,42 +67,6 @@ class JadwalController extends Controller
     public function store(Request $request)
     {
         //
-        $validator = Validator::make($request->all(), [
-            'kapal' => 'required',
-            'asal' => 'required',
-            'tujuan' => 'required',
-            'tanggal' => 'required',
-            'waktu' => 'required',
-            'estimasi' => 'required',
-            'harga' => 'required'
-        ]);
-
-        if ($validator->fails()) {
-            return response([
-                'status' => 500,
-                'message' => 'Validator Fail'
-            ]);
-        }
-
-        $create = new Jadwal;
-        $create->waktu_berangkat = $request->waktu;
-        $create->id_asal_pelabuhan = $request->asal;
-        $create->id_tujuan_pelabuhan = $request->tujuan;
-        $create->estimasi_waktu = $request->estimasi;
-        $create->id_kapal = $request->kapal;
-        $create->tanggal = $request->tanggal;
-        $create->harga = $request->harga;
-        if ($create->save()) {
-            return response([
-                'status' => 200,
-                'message' => 'success create jadwal'
-            ]);
-        } else {
-            return response([
-                'status' => 500,
-                'message' => 'failed create jadwal'
-            ]);
-        }
     }
 
     /**
@@ -125,16 +82,15 @@ class JadwalController extends Controller
         $jadwal = Jadwal::find($id);
 
         if (isset($jadwal)) {
-            $data['jadwal'] = [
+            array_push($data, [
                 'id' => $jadwal->id,
                 'waktu_berangkat' => $jadwal->waktu_berangkat,
+                'waktu_sampai' => $jadwal->waktu_sampai,
                 'harga' => $jadwal->harga,
                 'asal' => $jadwal->id_asal_pelabuhan,
                 'tujuan' => $jadwal->id_tujuan_pelabuhan,
-                'estimasi' => $jadwal->estimasi_waktu,
-                'id_kapal' => $jadwal->id_kapal,
-                'tanggal' => $jadwal->tanggal
-            ];
+                'speedboat' => $jadwal->id_speedboat
+            ]);
 
             return response([
                 'status' => 200,
@@ -231,25 +187,5 @@ class JadwalController extends Controller
     public function destroy($id)
     {
         //
-        $jadwal = Jadwal::find($id);
-
-        if (isset($jadwal)) {
-            if ($jadwal->delete()) {
-                return response([
-                    'status' => 200,
-                    'message' => 'Success Delete jadwal'
-                ]);
-            }
-
-            return response([
-                'status' => 500,
-                'message' => 'Failed Delete jadwal'
-            ]);
-        }
-
-        return response([
-            'status' => 404,
-            'message' => 'jadwal not Found'
-        ]);
     }
 }

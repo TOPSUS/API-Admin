@@ -15,7 +15,8 @@ class Jadwal extends Model
     protected $dates = ['deleted_at'];
 
     protected $fillable = [
-        'waktu_berangkat', 'id_asal_pelabuhan', 'id_tujuan_pelabuhan', 'estimasi_waktu', 'id_kapal', 'tanggal', 'harga'
+        'waktu_berangkat', 'id_asal_pelabuhan', 'waktu_sampai', 'id_tujuan_pelabuhan', 'id_speedboat',
+        'harga'
     ];
 
     public function pelabuhanasal() {
@@ -26,8 +27,8 @@ class Jadwal extends Model
         return $this->belongsTo(Pelabuhan::class, 'id_tujuan_pelabuhan');
     }
 
-    public function kapal() {
-        return $this->belongsTo(Kapal::class, 'id_kapal');
+    public function speedboat() {
+        return $this->belongsTo(Speedboat::class, 'id_speedboat');
     }
 
     public function pembelian() {
