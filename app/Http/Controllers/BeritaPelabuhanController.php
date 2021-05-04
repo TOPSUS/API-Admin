@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use App\BeritaPelabuhan;
+use Auth;
 class BeritaPelabuhanController extends Controller
 {
     /**
@@ -14,6 +15,34 @@ class BeritaPelabuhanController extends Controller
     public function index()
     {
         //
+        $data = array();
+        $id_user = Auth::user()->id;
+        $listBerita = BeritaPelabuhan::where('id_user', $id_user)->get();
+
+        // dd(count($listKapal));
+
+        $temp = array();
+        foreach ($listBerita as $list) {
+            $berita = BeritaPelabuhan::find($list->id);
+            if (isset($berita)) {
+                array_push($temp, [
+                    'id' => $berita->id,
+                    'judul' => $berita->judul,
+                    'foto' => $berita->foto,
+                    'created' => $berita->created_at,
+                ]);
+            }
+        }
+
+        $data = [
+            'list_berita' => $temp
+        ];
+
+        return response([
+            'status' => 200,
+            'data' => $data,
+            'message' => 'list data berita fetched'
+        ]);
     }
 
     /**
