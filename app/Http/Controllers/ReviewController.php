@@ -160,7 +160,7 @@ class ReviewController extends Controller
                     'to_place' => $review->pembelian->jadwal->pelabuhantujuan->kode_pelabuhan,
                     'to_date' => date("d F Y", strtotime($review->pembelian->jadwal->waktu_sampai)),
                     'to_time' => date("H.i A", strtotime($review->pembelian->jadwal->waktu_sampai)),
-                    'speedboat' => $review->speedboat->nama_speedboat,
+                    'speedboat' => $review->pembelian->jadwal->kapal->nama_kapal,
                     'person' => count($review->pembelian->detail)." Persons",
                     'price' => $review->pembelian->jadwal->harga
                 ]

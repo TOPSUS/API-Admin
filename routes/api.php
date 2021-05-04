@@ -57,6 +57,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     /* Transaksi Routes */
     Route::get('transaksi/proses', 'PembelianController@indexProses');
     Route::get('transaksi/done', 'PembelianController@indexDone');
+    Route::get('transaksi/all', 'PembelianController@indexAll');
     Route::get('transaksi/detail/{id}', 'PembelianController@detailTransaksi');
     Route::get('transaksi/tiket/{kode_tiket}', 'PembelianController@showTiket');
     Route::get('transaksi/tiket/approve/{id}', 'PembelianController@approveTiket');
